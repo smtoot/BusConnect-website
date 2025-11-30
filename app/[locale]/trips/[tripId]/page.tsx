@@ -107,13 +107,12 @@ export default function TripDetailsPage({ params }: { params: Promise<{ tripId: 
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                         <div>
                             <h1 className="text-2xl font-bold mb-2">{trip.route}</h1>
-                            <div className="flex items-center gap-4 text-blue-100">
                                 <div className="flex items-center gap-1">
                                     <Clock className="h-4 w-4" />
-                                    <span>{formatTime(trip.departureTime, locale)} - {formatTime(trip.arrivalTime, locale)}</span>
+                                    <span>{formatTime(trip.departureTime, locale)} - {trip.arrivalTime ? formatTime(trip.arrivalTime, locale) : '?'}</span>
                                 </div>
                                 <span>•</span>
-                                <span>{formatDuration(trip.departureTime, trip.arrivalTime, locale)}</span>
+                                <span>{trip.duration || (trip.arrivalTime ? formatDuration(trip.departureTime, trip.arrivalTime, locale) : '-')}</span>
                             </div>
                         </div>
                         <div className="text-right">
@@ -175,6 +174,6 @@ export default function TripDetailsPage({ params }: { params: Promise<{ tripId: 
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
