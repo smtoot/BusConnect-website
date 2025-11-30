@@ -19,9 +19,30 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from '@/components/ui/popover';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
 import { searchFormSchema, type SearchFormData } from '@/lib/validators/schemas';
 import { cn } from '@/lib/utils';
+
+// Common Saudi cities
+const SAUDI_CITIES = [
+    { value: 'Riyadh', label: 'الرياض', labelEn: 'Riyadh' },
+    { value: 'Jeddah', label: 'جدة', labelEn: 'Jeddah' },
+    { value: 'Mecca', label: 'مكة', labelEn: 'Mecca' },
+    { value: 'Medina', label: 'المدينة', labelEn: 'Medina' },
+    { value: 'Dammam', label: 'الدمام', labelEn: 'Dammam' },
+    { value: 'Khobar', label: 'الخبر', labelEn: 'Khobar' },
+    { value: 'Taif', label: 'الطائف', labelEn: 'Taif' },
+    { value: 'Tabuk', label: 'تبوك', labelEn: 'Tabuk' },
+    { value: 'Abha', label: 'أبها', labelEn: 'Abha' },
+    { value: 'Khamis Mushait', label: 'خميس مشيط', labelEn: 'Khamis Mushait' },
+];
 
 export function SearchForm() {
     const t = useTranslations('search');
@@ -57,13 +78,24 @@ export function SearchForm() {
                     {/* From */}
                     <div className="md:col-span-3 space-y-2">
                         <Label htmlFor="from">{t('from')}</Label>
-                        <Input
-                            id="from"
-                            placeholder={t('from')}
-                            {...form.register('from')}
-                            className={cn(form.formState.errors.from && "border-destructive")}
-                            suppressHydrationWarning
-                        />
+                        <Select
+                            value={form.watch('from')}
+                            onValueChange={(value) => form.setValue('from', value)}
+                        >
+                            <SelectTrigger
+                                className={cn(form.formState.errors.from && "border-destructive")}
+                                suppressHydrationWarning
+                            >
+                                <SelectValue placeholder={t('from')} />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {SAUDI_CITIES.map((city) => (
+                                    <SelectItem key={city.value} value={city.value}>
+                                        {locale === 'ar' ? city.label : city.labelEn}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                         {form.formState.errors.from && (
                             <p className="text-xs text-destructive">{tCommon('required')}</p>
                         )}
@@ -72,13 +104,24 @@ export function SearchForm() {
                     {/* To */}
                     <div className="md:col-span-3 space-y-2">
                         <Label htmlFor="to">{t('to')}</Label>
-                        <Input
-                            id="to"
-                            placeholder={t('to')}
-                            {...form.register('to')}
-                            className={cn(form.formState.errors.to && "border-destructive")}
-                            suppressHydrationWarning
-                        />
+                        <Select
+                            value={form.watch('to')}
+                            onValueChange={(value) => form.setValue('to', value)}
+                        >
+                            <SelectTrigger
+                                className={cn(form.formState.errors.to && "border-destructive")}
+                                suppressHydrationWarning
+                            >
+                                <SelectValue placeholder={t('to')} />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {SAUDI_CITIES.map((city) => (
+                                    <SelectItem key={city.value} value={city.value}>
+                                        {locale === 'ar' ? city.label : city.labelEn}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                         {form.formState.errors.to && (
                             <p className="text-xs text-destructive">{tCommon('required')}</p>
                         )}
