@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
     request: NextRequest,
-    { params }: { params: { tripId: string } }
+    { params }: { params: Promise<{ tripId: string }> }
 ) {
     try {
-        const { tripId } = params;
+        const { tripId } = await params;
         const backendUrl = process.env.BACKEND_API_URL;
         const backendToken = process.env.BACKEND_API_TOKEN;
 
