@@ -7,71 +7,96 @@
 // --------------------------------------------
 
 export interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-  message?: string;
-  meta?: PaginationMeta;
+    success: boolean;
+    data: T;
+    message?: string;
+    meta?: PaginationMeta;
 }
 
 export interface PaginationMeta {
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
 }
 
 export interface ApiError {
-  success: false;
-  error: {
-    code: string;
-    message: string;
-    details?: unknown;
-  };
+    success: false;
+    error: {
+        code: string;
+        message: string;
+        details?: unknown;
+    };
 }
 
 // --------------------------------------------
 // Trip Types
 // --------------------------------------------
 
-export interface Trip {
-  id: string;
-  route: string;
-  departureDate: string; // YYYY-MM-DD
-  departureTime: string; // HH:mm
-  arrivalTime: string; // HH:mm
-  price: number;
-  availableSeats: number;
-  totalSeats: number;
-  company: Company;
-  vehicle: Vehicle;
-}
-
-export interface TripDetails extends Trip {
-  seatMap: SeatMap;
-}
-
 export interface Company {
-  name: string;
-  logo?: string;
+    id: string;
+    name: string;
+    logo: string | null;
+    publicCommissionRate?: number;
 }
 
 export interface Vehicle {
-  type: string;
-  amenities: string[];
+    id: string;
+    type?: string; // Keep for backwards compatibility
+    model: string;
+    capacity: number;
+    amenities: string[];
+    status?: string;
+}
+
+export interface PriceAdjustment {
+    rule: string;
+    amount: number;
+}
+
+export interface PriceBreakdown {
+    basePrice: number;
+    finalPrice: number;
+    adjustments: PriceAdjustment[];
+    currency: string;
+}
+
+export interface Trip {
+    id: string;
+    tripId?: string;
+    name?: string;
+    route: string;
+    departureDate: string; // YYYY-MM-DD or ISO string
+    departureTime: string; // HH:mm
+    arrivalDate?: string;
+    arrivalTime?: string; // HH:mm
+    duration?: string;
+    price: number;
+    originalPrice?: number;
+    availableSeats?: number;
+    totalSeats?: number;
+    capacity?: number; // Fallback for availableSeats
+    company?: Company;
+    vehicle?: Vehicle;
+    priceBreakdown?: PriceBreakdown;
+}
+
+export interface TripDetails extends Trip {
+    seatMap: SeatMap;
 }
 
 export interface TripSearchParams {
-  from: string;
-  to: string;
-  date: string; // YYYY-MM-DD
-  passengers?: number;
-  page?: number;
-  limit?: number;
+    from: string;
+    to: string;
+    date: string; // YYYY-MM-DD
+    passengers?: number;
+    page?: number;
+    limit?: number;
 }
 
 export interface TripSearchResponse {
-  trips: Trip[];
-  meta: PaginationMeta;
+    trips: Trip[];
+    meta: PaginationMeta;
 }
 
 // --------------------------------------------
@@ -82,16 +107,16 @@ export type SeatStatus = 'AVAILABLE' | 'BOOKED' | 'HELD';
 export type SeatType = 'window' | 'aisle' | 'middle';
 
 export interface Seat {
-  number: string;
-  status: SeatStatus;
-  type: SeatType;
-  expiresAt?: string; // ISO 8601 timestamp (for HELD seats)
+    number: string;
+    status: SeatStatus;
+    type: SeatType;
+    expiresAt?: string; // ISO 8601 timestamp (for HELD seats)
 }
 
 export interface SeatMap {
-  layout: string; // e.g., "2-2" (seats per row)
-  rows: number;
-  seats: Seat[];
+    layout: string; // e.g., "2-2" (seats per row)
+    rows: number;
+    seats: Seat[];
 }
 
 // --------------------------------------------
@@ -103,61 +128,61 @@ export type PaymentStatus = 'PENDING' | 'PAID' | 'FAILED' | 'REFUNDED';
 export type IdType = 'NATIONAL_ID' | 'PASSPORT';
 
 export interface HoldSeatsRequest {
-  tripId: string;
-  seatNumbers: string[];
+    tripId: string;
+    seatNumbers: string[];
 }
 
 export interface HoldSeatsResponse {
-  holdId: string;
-  expiresAt: string; // ISO 8601 timestamp
-  seatNumbers: string[];
-  tripId: string;
+    holdId: string;
+    expiresAt: string; // ISO 8601 timestamp
+    seatNumbers: string[];
+    tripId: string;
 }
 
 export interface PassengerInput {
-  name: string;
-  email: string;
-  phone: string;
-  idType: IdType;
-  idNumber: string;
+    name: string;
+    email: string;
+    phone: string;
+    idType: IdType;
+    idNumber: string;
 }
 
 export interface CreateBookingRequest {
-  holdId: string;
-  passengers: PassengerInput[];
-  contactEmail: string;
-  contactPhone: string;
-  paymentMethod: 'stripe';
+    holdId: string;
+    passengers: PassengerInput[];
+    contactEmail: string;
+    contactPhone: string;
+    paymentMethod: 'stripe';
 }
 
 export interface CreateBookingResponse {
-  bookingRef: string;
-  amount: number;
-  currency: string;
-  payment: PaymentIntent;
-  expiresAt: string; // ISO 8601 timestamp
+    bookingRef: string;
+    amount: number;
+    currency: string;
+    payment: PaymentIntent;
+    expiresAt: string; // ISO 8601 timestamp
 }
 
 export interface PaymentIntent {
-  paymentId: string;
-  clientSecret: string;
-  publishableKey: string;
+    paymentId: string;
+    clientSecret: string;
+    publishableKey: string;
 }
 
 export interface Booking {
-  bookingRef: string;
-  status: BookingStatus;
-  paymentStatus: PaymentStatus;
-  trip: TripDetails;
-  passengers: PassengerInput[];
-  totalAmount: number;
-  currency: string;
-  createdAt: string; // ISO 8601 timestamp
+    bookingRef: string;
+    status: BookingStatus;
+    paymentStatus: PaymentStatus;
+    trip: TripDetails;
+    passengers: PassengerInput[];
+    totalAmount: number;
+    currency: string;
+    createdAt: string; // ISO 8601 timestamp
 }
 
 export interface BookingLookupParams {
-  bookingRef: string;
-  email: string;
+    bookingRef: string;
+    email: string;
 }
 
 // --------------------------------------------
@@ -165,14 +190,14 @@ export interface BookingLookupParams {
 // --------------------------------------------
 
 export interface TripFilters {
-  priceRange?: {
-    min: number;
-    max: number;
-  };
-  departureTimeRange?: {
-    start: string; // HH:mm
-    end: string; // HH:mm
-  };
-  companies?: string[];
-  amenities?: string[];
+    priceRange?: {
+        min: number;
+        max: number;
+    };
+    departureTimeRange?: {
+        start: string; // HH:mm
+        end: string; // HH:mm
+    };
+    companies?: string[];
+    amenities?: string[];
 }

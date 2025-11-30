@@ -33,18 +33,30 @@ export function TripCard({ trip, onSelect }: TripCardProps) {
                 <div className="flex flex-col md:flex-row justify-between gap-6">
                     {/* Company & Route Info */}
                     <div className="flex-1 space-y-4">
+                        {/* Company Header with Logo */}
                         <div className="flex items-center gap-3">
-                            {trip.company?.logo && (
+                            {trip.company?.logo ? (
                                 <img
                                     src={trip.company.logo}
                                     alt={trip.company.name}
-                                    className="h-8 w-8 object-contain"
+                                    className="h-10 w-10 rounded-full object-cover border-2 border-gray-100"
                                 />
+                            ) : (
+                                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center border-2 border-primary/20">
+                                    <span className="text-sm font-bold text-primary">
+                                        {trip.company?.name?.charAt(0) || trip.name?.charAt(0) || 'B'}
+                                    </span>
+                                </div>
                             )}
-                            <span className="font-semibold text-lg">{trip.company?.name || trip.name || 'Bus Service'}</span>
-                            {trip.vehicle?.type && (
-                                <span className="text-sm text-muted-foreground bg-secondary px-2 py-0.5 rounded">
-                                    {trip.vehicle.type}
+                            <div className="flex-1">
+                                <div className="font-semibold text-base">{trip.company?.name || 'Bus Company'}</div>
+                                {trip.name && (
+                                    <div className="text-sm text-muted-foreground">{trip.name}</div>
+                                )}
+                            </div>
+                            {trip.vehicle?.model && (
+                                <span className="text-xs text-muted-foreground bg-secondary px-2 py-1 rounded">
+                                    {trip.vehicle.model}
                                 </span>
                             )}
                         </div>
@@ -57,7 +69,7 @@ export function TripCard({ trip, onSelect }: TripCardProps) {
 
                             <div className="flex-1 flex flex-col items-center px-2">
                                 <div className="text-xs text-muted-foreground mb-1">
-                                    {trip.arrivalTime ? formatDuration(trip.departureTime, trip.arrivalTime, locale) : '-'}
+                                    {trip.duration || (trip.arrivalTime ? formatDuration(trip.departureTime, trip.arrivalTime, locale) : '-')}
                                 </div>
                                 <div className="w-full h-px bg-border relative">
                                     <div className="absolute top-1/2 left-0 w-2 h-2 rounded-full bg-primary -translate-y-1/2" />
@@ -71,12 +83,16 @@ export function TripCard({ trip, onSelect }: TripCardProps) {
                             </div>
                         </div>
 
+                        {/* Amenities */}
                         {trip.vehicle?.amenities && trip.vehicle.amenities.length > 0 && (
-                            <div className="flex flex-wrap gap-3 text-muted-foreground">
-                                {trip.vehicle.amenities.map((amenity) => (
-                                    <div key={amenity} className="flex items-center gap-1 text-xs" title={t(`amenities.${amenity.toLowerCase()}`)}>
+                            <div className="flex flex-wrap gap-2">
+                                {trip.vehicle.amenities.map((amenity, index) => (
+                                    <div
+                                        key={index}
+                                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100"
+                                    >
                                         {getAmenityIcon(amenity)}
-                                        <span className="hidden sm:inline">{t(`amenities.${amenity.toLowerCase()}`)}</span>
+                                        <span>{amenity}</span>
                                     </div>
                                 ))}
                             </div>
@@ -117,4 +133,4 @@ export function TripCard({ trip, onSelect }: TripCardProps) {
         </Card>
     );
 }
-```
+
