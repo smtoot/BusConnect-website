@@ -20,7 +20,10 @@
     "passengers": "Passengers",
     "searchButton": "Search Trips",
     "noResults": "No trips found for your search criteria",
-    "modifySearch": "Modify Search"
+    "modifySearch": "Modify Search",
+    "error": "Failed to load trips. Please try again.",
+    "loading": "Searching for trips...",
+    "results": "{count} trips found"
   },
   "filters": {
     "title": "Filters",
