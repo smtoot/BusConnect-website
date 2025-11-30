@@ -129,11 +129,17 @@ export default function TripDetailsPage({ params }: { params: Promise<{ tripId: 
                     {/* Seat Map */}
                     <div className="lg:col-span-2 space-y-6">
                         <h2 className="text-xl font-semibold">{t('seatSelection.title')}</h2>
-                        <SeatMap
-                            seatMap={trip.seatMap}
-                            selectedSeats={selectedSeats}
-                            onToggleSeat={toggleSeat}
-                        />
+                        {trip.seatMap ? (
+                            <SeatMap
+                                seatMap={trip.seatMap}
+                                selectedSeats={selectedSeats}
+                                onToggleSeat={toggleSeat}
+                            />
+                        ) : (
+                            <div className="p-8 text-center border rounded-xl bg-gray-50 text-muted-foreground">
+                                {tCommon('error')} - Seat map data missing
+                            </div>
+                        )}
                     </div>
 
                     {/* Summary Sidebar */}
