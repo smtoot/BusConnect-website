@@ -1,0 +1,111 @@
+{
+    "common": {
+        "search": "بحث",
+        "select": "اختيار",
+        "continue": "متابعة",
+        "cancel": "إلغاء",
+        "back": "رجوع",
+        "loading": "جاري التحميل...",
+        "error": "حدث خطأ",
+        "success": "تم بنجاح",
+        "required": "مطلوب",
+        "optional": "اختياري"
+    },
+    "search": {
+        "title": "ابحث عن رحلتك القادمة",
+        "subtitle": "احجز تذاكر الحافلات في جميع أنحاء المملكة بسهولة وأمان",
+        "from": "من",
+        "to": "إلى",
+        "date": "التاريخ",
+        "passengers": "عدد الركاب",
+        "searchButton": "بحث عن رحلات",
+        "noResults": "لم يتم العثور على رحلات تطابق معايير البحث",
+        "modifySearch": "تعديل البحث"
+    },
+    "filters": {
+        "title": "تصفية النتائج",
+        "price": "نطاق السعر",
+        "departureTime": "وقت المغادرة",
+        "company": "شركة النقل",
+        "amenities": "المميزات",
+        "clearAll": "مسح الكل"
+    },
+    "trip": {
+        "duration": "المدة",
+        "seatsAvailable": "متبقي {count} مقاعد",
+        "perPerson": "للشخص",
+        "amenities": {
+            "wifi": "واي فاي",
+            "ac": "تكييف",
+            "usb": "شحن USB",
+            "meal": "وجبة",
+            "reclining": "مقاعد مريحة"
+        }
+    },
+    "booking": {
+        "steps": {
+            "seats": "اختيار المقاعد",
+            "passengers": "بيانات الركاب",
+            "payment": "الدفع",
+            "confirmation": "تأكيد الحجز"
+        },
+        "seatSelection": {
+            "title": "اختر مقاعدك",
+            "legend": {
+                "available": "متاح",
+                "selected": "محدد",
+                "booked": "محجوز",
+                "held": "قيد الحجز"
+            },
+            "selectedSeats": "المقاعد المحددة",
+            "totalPrice": "السعر الإجمالي",
+            "holdTimer": "الوقت المتبقي لإكمال الحجز: {time}"
+        },
+        "passengerForm": {
+            "title": "معلومات الركاب",
+            "passenger": "راكب {number}",
+            "name": "الاسم الكامل",
+            "email": "البريد الإلكتروني",
+            "phone": "رقم الهاتف",
+            "idType": "نوع الهوية",
+            "idNumber": "رقم الهوية",
+            "nationalId": "هوية وطنية",
+            "passport": "جواز سفر",
+            "contactInfo": "معلومات الاتصال",
+            "sameAsPassenger": "نفس بيانات الراكب 1",
+            "terms": "أوافق على الشروط والأحكام وسياسة الخصوصية"
+        },
+        "payment": {
+            "title": "تفاصيل الدفع",
+            "summary": "ملخص الحجز",
+            "payButton": "دفع {amount}",
+            "secure": "دفع آمن عبر Stripe"
+        },
+        "confirmation": {
+            "title": "تم تأكيد الحجز!",
+            "subtitle": "رقم مرجع الحجز الخاص بك هو",
+            "emailSent": "تم إرسال بريد إلكتروني للتأكيد إلى {email}",
+            "downloadTicket": "تحميل التذكرة",
+            "bookAnother": "حجز رحلة أخرى"
+        }
+    },
+    "myBookings": {
+        "title": "حجوزاتي",
+        "subtitle": "عرض وإدارة حجوزاتك",
+        "emailLabel": "البريد الإلكتروني",
+        "refLabel": "رقم المرجع (اختياري)",
+        "findButton": "البحث عن الحجوزات",
+        "noBookings": "لم يتم العثور على حجوزات لهذا البريد الإلكتروني",
+        "status": {
+            "CONFIRMED": "مؤكد",
+            "PENDING": "قيد الانتظار",
+            "CANCELLED": "ملغي"
+        }
+    },
+    "validation": {
+        "required": "هذا الحقل مطلوب",
+        "email": "الرجاء إدخال بريد إلكتروني صحيح",
+        "phone": "الرجاء إدخال رقم هاتف صحيح",
+        "idNumber": "الرجاء إدخال رقم هوية صحيح"
+    }
+}

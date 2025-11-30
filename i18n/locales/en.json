@@ -1,0 +1,111 @@
+{
+  "common": {
+    "search": "Search",
+    "select": "Select",
+    "continue": "Continue",
+    "cancel": "Cancel",
+    "back": "Back",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "required": "Required",
+    "optional": "Optional"
+  },
+  "search": {
+    "title": "Find your next trip",
+    "subtitle": "Book bus tickets across Saudi Arabia easily and securely",
+    "from": "From",
+    "to": "To",
+    "date": "Date",
+    "passengers": "Passengers",
+    "searchButton": "Search Trips",
+    "noResults": "No trips found for your search criteria",
+    "modifySearch": "Modify Search"
+  },
+  "filters": {
+    "title": "Filters",
+    "price": "Price Range",
+    "departureTime": "Departure Time",
+    "company": "Bus Company",
+    "amenities": "Amenities",
+    "clearAll": "Clear All"
+  },
+  "trip": {
+    "duration": "Duration",
+    "seatsAvailable": "{count} seats left",
+    "perPerson": "per person",
+    "amenities": {
+      "wifi": "WiFi",
+      "ac": "AC",
+      "usb": "USB Charging",
+      "meal": "Meal",
+      "reclining": "Reclining Seats"
+    }
+  },
+  "booking": {
+    "steps": {
+      "seats": "Select Seats",
+      "passengers": "Passenger Details",
+      "payment": "Payment",
+      "confirmation": "Confirmation"
+    },
+    "seatSelection": {
+      "title": "Select your seats",
+      "legend": {
+        "available": "Available",
+        "selected": "Selected",
+        "booked": "Booked",
+        "held": "Reserved"
+      },
+      "selectedSeats": "Selected Seats",
+      "totalPrice": "Total Price",
+      "holdTimer": "Time remaining to complete booking: {time}"
+    },
+    "passengerForm": {
+      "title": "Passenger Information",
+      "passenger": "Passenger {number}",
+      "name": "Full Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "idType": "ID Type",
+      "idNumber": "ID Number",
+      "nationalId": "National ID",
+      "passport": "Passport",
+      "contactInfo": "Contact Information",
+      "sameAsPassenger": "Same as Passenger 1",
+      "terms": "I agree to the Terms and Conditions and Privacy Policy"
+    },
+    "payment": {
+      "title": "Payment Details",
+      "summary": "Booking Summary",
+      "payButton": "Pay {amount}",
+      "secure": "Secure Payment via Stripe"
+    },
+    "confirmation": {
+      "title": "Booking Confirmed!",
+      "subtitle": "Your booking reference is",
+      "emailSent": "A confirmation email has been sent to {email}",
+      "downloadTicket": "Download Ticket",
+      "bookAnother": "Book Another Trip"
+    }
+  },
+  "myBookings": {
+    "title": "My Bookings",
+    "subtitle": "View and manage your bookings",
+    "emailLabel": "Email Address",
+    "refLabel": "Booking Reference (Optional)",
+    "findButton": "Find Bookings",
+    "noBookings": "No bookings found for this email",
+    "status": {
+      "CONFIRMED": "Confirmed",
+      "PENDING": "Pending",
+      "CANCELLED": "Cancelled"
+    }
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Please enter a valid email address",
+    "phone": "Please enter a valid phone number",
+    "idNumber": "Please enter a valid ID number"
+  }
+}
