@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { apiClient } from '@/lib/api/client';
+import { api } from '@/lib/api/client';
 import { useBookingStore } from '@/store/bookingStore';
 import { generateIdempotencyKey } from '@/lib/utils/idempotency';
 import { formatPrice, formatTime, formatDuration } from '@/lib/utils/formatters';
@@ -39,7 +39,7 @@ export default function TripDetailsPage({ params }: { params: Promise<{ tripId: 
     // Fetch Trip Details
     const { data: trip, isLoading, error } = useQuery({
         queryKey: ['trip', tripId],
-        queryFn: () => apiClient.getTripDetails(tripId),
+        queryFn: () => api.getTripDetails(tripId),
     });
 
     // Set selected trip in store when loaded
@@ -53,7 +53,7 @@ export default function TripDetailsPage({ params }: { params: Promise<{ tripId: 
     const holdSeatsMutation = useMutation({
         mutationFn: async () => {
             const idempotencyKey = generateIdempotencyKey();
-            return apiClient.holdSeats({ tripId, seatNumbers: selectedSeats }, idempotencyKey);
+            return api.holdSeats(tripId, selectedSeats);
         },
         onSuccess: (data) => {
             setHold(data.holdId, new Date(data.expiresAt));

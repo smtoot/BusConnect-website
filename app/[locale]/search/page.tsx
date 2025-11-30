@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
 import { useQuery } from '@tanstack/react-query';
-import { apiClient } from '@/lib/api/client';
+import { api } from '@/lib/api/client';
 import { TripCard } from '@/components/search/TripCard';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -29,7 +29,7 @@ export default function SearchPage() {
 
     const { data, isLoading, error } = useQuery({
         queryKey: ['trips', params],
-        queryFn: () => apiClient.searchTrips(params),
+        queryFn: () => api.searchTrips(params),
         enabled: !!params.from && !!params.to && !!params.date,
     });
 

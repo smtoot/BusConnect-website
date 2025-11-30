@@ -7,7 +7,7 @@ import { useMutation } from '@tanstack/react-query';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useBookingStore } from '@/store/bookingStore';
-import { apiClient } from '@/lib/api/client';
+import { api } from '@/lib/api/client';
 import { generateIdempotencyKey } from '@/lib/utils/idempotency';
 import { formatPrice } from '@/lib/utils/formatters';
 import { Button } from '@/components/ui/button';
@@ -39,7 +39,7 @@ function PaymentForm() {
     const createBookingMutation = useMutation({
         mutationFn: async (paymentIntentId: string) => {
             const idempotencyKey = generateIdempotencyKey();
-            return apiClient.createBooking({
+            return api.createBooking({
                 tripId: selectedTrip!.id,
                 holdId: holdId!,
                 passengers,

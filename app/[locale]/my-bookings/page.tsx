@@ -5,7 +5,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import { apiClient } from '@/lib/api/client';
+import { api } from '@/lib/api/client';
 import { bookingLookupSchema, type BookingLookupData } from '@/lib/validators/schemas';
 import { formatPrice, formatTime, formatDate } from '@/lib/utils/formatters';
 import { Button } from '@/components/ui/button';
@@ -33,7 +33,7 @@ export default function MyBookingsPage() {
 
     const lookupMutation = useMutation({
         mutationFn: (data: BookingLookupData) =>
-            apiClient.getBooking(data.bookingReference, data.email),
+            api.getBooking(data.bookingReference),
         onSuccess: (data) => {
             setBooking(data);
         },

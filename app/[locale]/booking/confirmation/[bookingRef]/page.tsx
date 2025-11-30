@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
 import { useQuery } from '@tanstack/react-query';
-import { apiClient } from '@/lib/api/client';
+import { api } from '@/lib/api/client';
 import { formatPrice, formatTime, formatDate } from '@/lib/utils/formatters';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -26,7 +26,7 @@ export default function ConfirmationPage({ params }: { params: Promise<{ booking
 
     const { data: booking, isLoading, error } = useQuery({
         queryKey: ['booking', bookingRef],
-        queryFn: () => apiClient.getBooking(bookingRef, ''), // Email should be from store or URL param
+        queryFn: () => api.getBooking(bookingRef),
         enabled: !!bookingRef,
     });
 
