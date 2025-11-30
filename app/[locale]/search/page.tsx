@@ -120,7 +120,7 @@ export default function SearchPage() {
                                 Try Again
                             </Button>
                         </div>
-                    ) : data?.trips.length === 0 ? (
+                    ) : data?.length === 0 ? (
                         <div className="text-center py-12 bg-white rounded-lg shadow-sm">
                             <p className="text-muted-foreground mb-4">{t('noResults')}</p>
                             <Button onClick={() => router.push('/')} variant="outline">
@@ -128,7 +128,7 @@ export default function SearchPage() {
                             </Button>
                         </div>
                     ) : (
-                        data?.trips.map((trip) => (
+                        data?.map((trip) => (
                             <TripCard
                                 key={trip.id}
                                 trip={trip}

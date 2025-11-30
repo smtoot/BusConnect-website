@@ -53,7 +53,11 @@ export const api = {
         const searchParams = new URLSearchParams();
         if (params.from) searchParams.append('from', params.from);
         if (params.to) searchParams.append('to', params.to);
-        if (params.date) searchParams.append('date', params.date.toISOString());
+        if (params.date) {
+            // Handle both string and Date types
+            const dateStr = typeof params.date === 'string' ? params.date : params.date.toISOString();
+            searchParams.append('date', dateStr);
+        }
         if (params.passengers) searchParams.append('passengers', params.passengers.toString());
 
         // The proxy returns { data: Trip[], meta: ... }
