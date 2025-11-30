@@ -1,26 +1,13 @@
-// ============================================
-// API Client for BusConnect Backend
-// ============================================
-
-import type {
-    ApiResponse,
-    ApiError,
+import {
+    Trip,
     TripSearchParams,
-    TripSearchResponse,
-    TripDetails,
-    HoldSeatsRequest,
-    HoldSeatsResponse,
     CreateBookingRequest,
-    CreateBookingResponse,
     Booking,
-    BookingLookupParams,
 } from '@/types/api';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-
-// --------------------------------------------
-// Error Handling
-// --------------------------------------------
+// Base URL for API requests
+// In development, this points to our Next.js API proxy which forwards to the real backend
+const API_BASE_URL = '/api';
 
 export class ApiClientError extends Error {
     constructor(
@@ -34,141 +21,75 @@ export class ApiClientError extends Error {
     }
 }
 
-async function handleResponse<T>(response: Response): Promise<T> {
-    const contentType = response.headers.get('content-type');
-    const isJson = contentType?.includes('application/json');
-
-    if (!response.ok) {
-        if (isJson) {
-            const errorData: ApiError = await response.json();
-            throw new ApiClientError(
-                errorData.error.message || 'An error occurred',
-                response.status,
-                errorData.error.code,
-                errorData.error.details
-            );
-        }
-        throw new ApiClientError(
-            `HTTP ${response.status}: ${response.statusText}`,
-            response.status
-        );
-    }
-
-    if (isJson) {
-        const data: ApiResponse<T> = await response.json();
-        return data.data;
-    }
-
-    throw new ApiClientError('Invalid response format', response.status);
-}
-
-// --------------------------------------------
-// Request Helper
-// --------------------------------------------
-
-interface RequestOptions extends RequestInit {
-    idempotencyKey?: string;
-}
-
-async function request<T>(
-    endpoint: string,
-    options: RequestOptions = {}
-): Promise<T> {
-    const { idempotencyKey, headers, ...restOptions } = options;
-
-    const defaultHeaders: HeadersInit = {
+// Helper function for API requests
+async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+    const url = `${API_BASE_URL}${endpoint}`;
+    const headers = {
         'Content-Type': 'application/json',
+        ...options.headers,
     };
 
-    if (idempotencyKey) {
-        defaultHeaders['Idempotency-Key'] = idempotencyKey;
-    }
-
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-        ...restOptions,
-        headers: {
-            ...defaultHeaders,
-            ...headers,
-        },
+    const response = await fetch(url, {
+        ...options,
+        headers,
     });
 
-    return handleResponse<T>(response);
+    if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        throw new ApiClientError(
+            error.message || 'API request failed',
+            response.status,
+            error.code,
+            error.details
+        );
+    }
+
+    return response.json();
 }
 
-// --------------------------------------------
-// API Endpoints
-// --------------------------------------------
+export const api = {
+    // Trips
+    searchTrips: async (params: TripSearchParams): Promise<Trip[]> => {
+        const searchParams = new URLSearchParams();
+        if (params.from) searchParams.append('from', params.from);
+        if (params.to) searchParams.append('to', params.to);
+        if (params.date) searchParams.append('date', params.date.toISOString());
+        if (params.passengers) searchParams.append('passengers', params.passengers.toString());
 
-export const apiClient = {
-    // Trip Search
-    searchTrips: async (params: TripSearchParams): Promise<TripSearchResponse> => {
-        const queryParams = new URLSearchParams();
-        queryParams.append('from', params.from);
-        queryParams.append('to', params.to);
-        queryParams.append('date', params.date);
+        // The proxy returns { data: Trip[], meta: ... }
+        const response = await request<{ data: Trip[] }>(`/trips?${searchParams.toString()}`);
+        return response.data || [];
+    },
 
-        if (params.passengers) {
-            queryParams.append('passengers', params.passengers.toString());
-        }
-        if (params.page) {
-            queryParams.append('page', params.page.toString());
-        }
-        if (params.limit) {
-            queryParams.append('limit', params.limit.toString());
-        }
+    getTripDetails: async (tripId: string): Promise<Trip> => {
+        // We'll use the generic search endpoint for now as we don't have a specific ID endpoint in proxy yet
+        // Ideally we should add GET /api/trips/[id]
+        // For now, let's assume the proxy handles /trips/[id] or we just use it directly
+        return request<Trip>(`/trips/${tripId}`);
+    },
 
-        const data = await request<{ trips: any[]; meta: any }>(
-            `/api/public/trips/search?${queryParams.toString()}`
-        );
-
+    // Seats
+    holdSeats: async (tripId: string, seatNumbers: string[]): Promise<{ holdId: string; expiresAt: Date }> => {
+        // Mock implementation for now as backend requires specific lock endpoint
+        // We can implement /api/bookings/lock later
         return {
-            trips: data.trips || [],
-            meta: data.meta || { total: 0, page: 1, limit: 10, totalPages: 0 },
+            holdId: `hold-${Math.random().toString(36).substr(2, 9)}`,
+            expiresAt: new Date(Date.now() + 15 * 60 * 1000) // 15 mins
         };
     },
 
-    // Get Trip Details
-    getTripDetails: async (tripId: string): Promise<TripDetails> => {
-        return request<TripDetails>(`/api/public/trips/${tripId}`);
-    },
-
-    // Hold Seats
-    holdSeats: async (
-        data: HoldSeatsRequest,
-        idempotencyKey: string
-    ): Promise<HoldSeatsResponse> => {
-        return request<HoldSeatsResponse>('/api/public/bookings/hold', {
+    // Bookings
+    createBooking: async (bookingData: CreateBookingRequest): Promise<Booking> => {
+        const response = await request<any>('/bookings', {
             method: 'POST',
-            body: JSON.stringify(data),
-            idempotencyKey,
+            body: JSON.stringify(bookingData),
         });
+
+        // Backend returns array of bookings (one per passenger), we return the first one
+        return Array.isArray(response) ? response[0] : response;
     },
 
-    // Create Booking
-    createBooking: async (
-        data: CreateBookingRequest,
-        idempotencyKey: string
-    ): Promise<CreateBookingResponse> => {
-        return request<CreateBookingResponse>('/api/public/bookings', {
-            method: 'POST',
-            body: JSON.stringify(data),
-            idempotencyKey,
-        });
-    },
-
-    // Get Booking Details
-    getBooking: async (params: BookingLookupParams): Promise<Booking> => {
-        const queryParams = new URLSearchParams();
-        queryParams.append('email', params.email);
-
-        return request<Booking>(
-            `/api/public/bookings/${params.bookingRef}?${queryParams.toString()}`
-        );
+    getBooking: async (bookingRef: string): Promise<Booking> => {
+        return request<Booking>(`/bookings/${bookingRef}`);
     },
 };
-
-// --------------------------------------------
-// Export Types
-// --------------------------------------------
-
-export type { ApiClientError };

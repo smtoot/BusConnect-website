@@ -45,8 +45,9 @@ export default async function RootLayout({
   const isRTL = locale === 'ar';
 
   return (
-    <html lang={locale} dir={isRTL ? 'rtl' : 'ltr'}>
+    <html lang={locale} dir={isRTL ? 'rtl' : 'ltr'} suppressHydrationWarning>
       <body
+        suppressHydrationWarning
         className={`${inter.variable} ${cairo.variable} ${isRTL ? 'font-arabic' : 'font-sans'
           } antialiased bg-gray-50`}
       >
