@@ -34,17 +34,19 @@ export function TripCard({ trip, onSelect }: TripCardProps) {
                     {/* Company & Route Info */}
                     <div className="flex-1 space-y-4">
                         <div className="flex items-center gap-3">
-                            {trip.company.logo && (
+                            {trip.company?.logo && (
                                 <img
                                     src={trip.company.logo}
                                     alt={trip.company.name}
                                     className="h-8 w-8 object-contain"
                                 />
                             )}
-                            <span className="font-semibold text-lg">{trip.company.name}</span>
-                            <span className="text-sm text-muted-foreground bg-secondary px-2 py-0.5 rounded">
-                                {trip.vehicle.type}
-                            </span>
+                            <span className="font-semibold text-lg">{trip.company?.name || trip.name || 'Bus Service'}</span>
+                            {trip.vehicle?.type && (
+                                <span className="text-sm text-muted-foreground bg-secondary px-2 py-0.5 rounded">
+                                    {trip.vehicle.type}
+                                </span>
+                            )}
                         </div>
 
                         <div className="flex items-center gap-4 md:gap-8">
@@ -55,7 +57,7 @@ export function TripCard({ trip, onSelect }: TripCardProps) {
 
                             <div className="flex-1 flex flex-col items-center px-2">
                                 <div className="text-xs text-muted-foreground mb-1">
-                                    {formatDuration(trip.departureTime, trip.arrivalTime, locale)}
+                                    {trip.arrivalTime ? formatDuration(trip.departureTime, trip.arrivalTime, locale) : '-'}
                                 </div>
                                 <div className="w-full h-px bg-border relative">
                                     <div className="absolute top-1/2 left-0 w-2 h-2 rounded-full bg-primary -translate-y-1/2" />
@@ -64,19 +66,21 @@ export function TripCard({ trip, onSelect }: TripCardProps) {
                             </div>
 
                             <div className="text-center min-w-[60px]">
-                                <div className="text-xl md:text-2xl font-bold">{formatTime(trip.arrivalTime, locale)}</div>
+                                <div className="text-xl md:text-2xl font-bold">{trip.arrivalTime ? formatTime(trip.arrivalTime, locale) : '-'}</div>
                                 <div className="text-sm text-muted-foreground">{destination}</div>
                             </div>
                         </div>
 
-                        <div className="flex flex-wrap gap-3 text-muted-foreground">
-                            {trip.vehicle.amenities.map((amenity) => (
-                                <div key={amenity} className="flex items-center gap-1 text-xs" title={t(`amenities.${amenity.toLowerCase()}`)}>
-                                    {getAmenityIcon(amenity)}
-                                    <span className="hidden sm:inline">{t(`amenities.${amenity.toLowerCase()}`)}</span>
-                                </div>
-                            ))}
-                        </div>
+                        {trip.vehicle?.amenities && trip.vehicle.amenities.length > 0 && (
+                            <div className="flex flex-wrap gap-3 text-muted-foreground">
+                                {trip.vehicle.amenities.map((amenity) => (
+                                    <div key={amenity} className="flex items-center gap-1 text-xs" title={t(`amenities.${amenity.toLowerCase()}`)}>
+                                        {getAmenityIcon(amenity)}
+                                        <span className="hidden sm:inline">{t(`amenities.${amenity.toLowerCase()}`)}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     {/* Price & Action */}
@@ -94,17 +98,17 @@ export function TripCard({ trip, onSelect }: TripCardProps) {
 
                         <div className="space-y-2 text-right w-full md:w-auto">
                             <div className="text-xs text-muted-foreground hidden md:block">
-                                {t('seatsAvailable', { count: trip.availableSeats })}
+                                {t('seatsAvailable', { count: trip.availableSeats || trip.capacity || 0 })}
                             </div>
                             <Button
                                 onClick={() => onSelect(trip.id)}
                                 className="w-full md:w-auto"
-                                disabled={trip.availableSeats === 0}
+                                disabled={(trip.availableSeats || trip.capacity || 0) === 0}
                             >
                                 {tCommon('select')}
                             </Button>
                             <div className="text-xs text-muted-foreground md:hidden text-center mt-1">
-                                {t('seatsAvailable', { count: trip.availableSeats })}
+                                {t('seatsAvailable', { count: trip.availableSeats || trip.capacity || 0 })}
                             </div>
                         </div>
                     </div>
@@ -113,3 +117,4 @@ export function TripCard({ trip, onSelect }: TripCardProps) {
         </Card>
     );
 }
+```
